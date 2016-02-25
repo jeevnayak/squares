@@ -1,0 +1,31 @@
+#modes {
+    margin-left: 25px;
+}
+
+#game-container {
+    position: relative;
+    margin: 25px;
+}
+
+.square {
+    position: absolute;
+    background-color: #eaeaae;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.square.clickable {
+    background-color: #d9d919;
+}
+
+.square.clicked {
+    background-color: #cccccc;
+}
+
+.square.right-only {
+    border-width: 10px 0px 10px 10px;
+    border-color: #999;
+    border-style: solid;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+} 
