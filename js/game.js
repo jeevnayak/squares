@@ -62,6 +62,8 @@ var GameMode = {
     PATH_CONSTRAINED: 2
 };
 
+var MODE = GameMode.PATH_CONSTRAINED;
+
 var Game = {
     SIDE_LENGTH_PX: 100,
     GAP_PX: 25,
@@ -137,7 +139,7 @@ var Game = {
     }
 };
 
-function generate3By3(initSquareKey, includeRightOnlySquares) {
+function generate3By3(includeRightOnlySquares) {
     var squares = {};
     for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 3; j++) {
@@ -153,7 +155,36 @@ function generate3By3(initSquareKey, includeRightOnlySquares) {
             squares[square.key] = square;
         }
     }
-    return squares;
+    return {
+        squares: squares,
+        initSquareKey: Square.generateKey(2,0)
+    };
+}
+
+var B2_CONFIG = {
+    coords: [[1, 0], [0, 1], [1, 1], [0, 2], [1, 2], [1, 3]],
+    initSquare: [1, 0]
+};
+
+function generateBoard(config) {
+    var squares = {};
+    for (var i = 0; i < config.coords.length; i++) {
+        var row = config.coords[i][0];
+        var col = config.coords[i][1];
+        var square = new Square(row, col, SquareType.NORMAL);
+        squares[square.key] = square;
+    }
+    return {
+        squares: squares,
+        initSquareKey: Square.generateKey(config.initSquare[0], config.initSquare[1])
+    };
+}
+
+var BOARD_FUNC = generate3By3;
+
+function initGame() {
+    var board = BOARD_FUNC()
+    Game.init(board.squares, board.initSquareKey, MODE);
 }
 
 $(function() {
@@ -162,24 +193,29 @@ $(function() {
     });
 
     $('#normal-button').on('click', function(event){
-        var initSquareKey = Square.generateKey(2,0);
-        Game.init(generate3By3(initSquareKey), initSquareKey, GameMode.NORMAL);
+        MODE = GameMode.NORMAL;
+        initGame();
     });
 
     $('#enable-neighbors-button').on('click', function(event){
-        var initSquareKey = Square.generateKey(2,0);
-        Game.init(generate3By3(initSquareKey), initSquareKey, GameMode.ENABLE_NEIGHBORS);
+        MODE = GameMode.ENABLE_NEIGHBORS;
+        initGame();
     });
 
     $('#path-constrained-button').on('click', function(event){
-        var initSquareKey = Square.generateKey(2,0);
-        Game.init(generate3By3(initSquareKey), initSquareKey, GameMode.PATH_CONSTRAINED);
+        MODE = GameMode.PATH_CONSTRAINED;
+        initGame();
     });
 
-    $('#right-only-button').on('click', function(event){
-        var initSquareKey = Square.generateKey(2,0);
-        Game.init(generate3By3(initSquareKey, true), initSquareKey, GameMode.PATH_CONSTRAINED);
+    $('#b1-button').on('click', function(event){
+        BOARD_FUNC = generate3By3;
+        initGame();
     });
 
-    Game.init(generate3By3(), Square.generateKey(2, 0), GameMode.NORMAL);
+    $('#b2-button').on('click', function(event){
+        BOARD_FUNC = generateBoard.bind(null, B2_CONFIG);
+        initGame();
+    });
+
+    initGame();
 });

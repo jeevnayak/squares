@@ -1,5 +1,9 @@
-#modes {
+#modes, #boards {
     margin-left: 25px;
+}
+
+#boards {
+    margin-top: 10px;
 }
 
 #game-container {
